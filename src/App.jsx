@@ -1,8 +1,22 @@
+import { useState } from 'react';
+
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState('social');
+
+  const openModal = (modal) => {
+    modal.preventDefault()
+    setIsModalOpen(true)
+    setActiveModal('social')
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setActiveModal('social')
+  }
 
   return (
     <>
-    
       {/* ***** Header Area Start ***** */}
       <header
         className="header-area header-sticky wow slideInDown"
@@ -38,7 +52,7 @@ function App() {
                     <a href="#newsletter">Newsletter</a>
                   </li>
                   <li>
-                    <div className="gradient-button">
+                    <div className="gradient-button" onClick={openModal} style={{ cursor: 'pointer' }}>
                       <a id="modal_trigger" href="#modal">
                         <i className="fa fa-sign-in-alt" /> Sign In Now
                       </a>
@@ -55,16 +69,49 @@ function App() {
         </div>
       </header>
       {/* ***** Header Area End ***** */}
-      <div id="modal" className="popupContainer" style={{ display: "none" }}>
+      {isModalOpen && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)", // dark overlay
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999
+          }}
+          onClick={closeModal}
+        />
+      )}
+
+      <div 
+        id="modal" 
+        className="popupContainer" 
+        style={{ 
+        display: isModalOpen ? "block" : "none",
+        position: "fixed",
+        top: "45%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        zIndex: 99999,
+        backgroundColor: "#fff",   
+        minWidth: "320px",         
+        borderRadius: "8px",       
+        boxShadow: "0 5px 20px rgba(0,0,0,0.3)" 
+        }}
+      >
         <div className="popupHeader">
-          <span className="header_title">Login</span>
-          <span className="modal_close">
+          <span className="header_title">{activeModal === 'register' ? 'Register' : 'Login'}</span>
+          <span className="modal_close" onClick={closeModal}>
             <i className="fa fa-times" />
           </span>
         </div>
         <section className="popupBody">
           {/* Social Login */}
-          <div className="social_login">
+          <div className="social_login" style={{ display: activeModal === 'social' ? 'block' : 'none' }}>
             <div className="">
               <a href="#" className="social_box fb">
                 <span className="icon">
@@ -84,19 +131,19 @@ function App() {
             </div>
             <div className="action_btns">
               <div className="one_half">
-                <a href="#" id="login_form" className="btn">
+                <a href="#" id="login_form" className="btn" onClick={(e) => { e.preventDefault(); setActiveModal('login') }}>
                   Login
                 </a>
               </div>
               <div className="one_half last">
-                <a href="#" id="register_form" className="btn">
+                <a href="#" id="register_form" className="btn"  onClick={(e) => { e.preventDefault(); setActiveModal('register') }}>
                   Sign up
                 </a>
               </div>
             </div>
           </div>
           {/* Username & Password Login form */}
-          <div className="user_login">
+          <div className="user_login" style={{ display: activeModal === 'login' ? 'block' : 'none' }}>
             <form>
               <label>Email / Username</label>
               <input type="text" />
@@ -110,7 +157,7 @@ function App() {
               </div>
               <div className="action_btns">
                 <div className="one_half">
-                  <a href="#" className="btn back_btn">
+                  <a href="#" className="btn back_btn" onClick={(e) => { e.preventDefault(); setActiveModal('social') }}>
                     <i className="fa fa-angle-double-left" /> Back
                   </a>
                 </div>
@@ -126,7 +173,7 @@ function App() {
             </a>
           </div>
           {/* Register Form */}
-          <div className="user_register">
+          <div className="user_register" style={{ display: activeModal === 'register' ? 'block' : 'none' }}>
             <form>
               <label>Full Name</label>
               <input type="text" />
@@ -145,7 +192,7 @@ function App() {
               </div>
               <div className="action_btns">
                 <div className="one_half">
-                  <a href="#" className="btn back_btn">
+                  <a href="#" className="btn back_btn" onClick={(e) => { e.preventDefault(); setActiveModal('social') }}>
                     <i className="fa fa-angle-double-left" /> Back
                   </a>
                 </div>
@@ -159,6 +206,7 @@ function App() {
           </div>
         </section>
       </div>
+
       <div
         className="main-banner wow fadeIn"
         id="top"
